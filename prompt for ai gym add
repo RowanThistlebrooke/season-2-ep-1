@@ -1,0 +1,41 @@
+Add a "Nova" AI coach avatar to my gym.html page (top-right corner), using the same
+bring-your-own-key approach as our nova-lite.html. Match our dark dashboard styling.
+When done, commit and push to GitHub.
+
+AVATAR (FAB): a 46px round button, fixed top-right at top:calc(env(safe-area-inset-top)+56px);
+right:14px; z-index:60 — a purple radial-gradient orb (🧠) with a soft glow and a small green
+"online" dot. Tapping it toggles a chat panel; tapping again closes it.
+
+PANEL: fixed under the avatar (top ~110px, right:14px), width min(340px, 100vw-28px),
+max-height:66vh, dark glass (#111016, rounded 18px). Contains:
+- A small header: 🧠 avatar + "Nova" / "your gym coach" + an × close button.
+- A scrollable messages area with coach (left, grey) and user (right, purple) bubbles,
+  rendered from minimal markdown (bold, `code`, and - bullets), with an animated typing-dots
+  loader while waiting.
+- Three quick-action chips: "📊 Overview", "⚖️ Weight", "💪 Lifts" that each send a preset
+  question.
+- A SMALL single-line input ("Ask Nova…") + a send button. Enter or the button sends.
+- On first open, a short greeting message.
+
+KEY: reuse the Anthropic key saved by the Nova page in localStorage under 'nova_lite_api_key'.
+If it's missing, tell the user to paste it on the Nova page first (don't add another key box).
+
+DATA THE COACH SEES: build a JSON context from these localStorage keys and pass it in the
+system prompt — po_coach_weights (bodyweight log, entries have dateKey + weight),
+po_coach_v1 (workout logs/state), po_coach_workout_done, po_coach_photos (progress photos),
+and the body profile from po_water_v1.profile (height/weight/age/sex/activity).
+IMPORTANT: strip all image data before sending — recursively drop any object key matching
+/img|photo|image|data|base64|url|thumb/i, cap arrays to the last ~90 items and strings to
+~180 chars, and for progress photos send only a {date, weight} timeline (NOT the base64
+images). If the whole JSON exceeds ~80k chars, replace the workouts blob with a placeholder.
+
+API CALL: POST https://api.anthropic.com/v1/messages with headers content-type, x-api-key
+(the saved key), anthropic-version 2023-06-01, and anthropic-dangerous-direct-browser-access:
+true. Body: model "claude-opus-4-8", max_tokens 1024, system = a coach persona prompt + the
+JSON context, messages = [{role:"user", content: the question}]. System persona: "You are
+Nova, the user's personal gym coach inside their fitness dashboard. You can see their profile,
+bodyweight log, workout logs, and progress-photo timeline (images not included). Coach
+concisely; for an overview cover bodyweight trend, training consistency, standout progress,
+and 1-2 next steps. Short markdown bullets, encouraging but honest, under ~180 words."
+
+Prefix all CSS/IDs with nv- / nv to avoid collisions with the existing page.
