@@ -1,0 +1,35 @@
+Build me a self-contained "Avatar Lab" — a local HTML playground for designing
+a chat/AI-assistant avatar. Create a single file called `avatar-lab.html` with
+NO build step and NO dependencies (pure HTML/CSS/JS, all inline). Then start a
+local server (`python3 -m http.server 8088`) and open it so I can see it.
+
+REQUIREMENTS:
+
+1. FIVE avatar designs, shown together in a responsive card grid. Each is a
+   pure-CSS animated avatar (no images, no Three.js):
+   - "Orb"     — glossy radial-gradient sphere with two eyes, gentle float
+   - "Reactor" — spinning conic-gradient energy rings around a bright core
+   - "Blob"    — soft morphing droplet (animated border-radius) with eyes
+   - "Bot"     — rounded robot head with a blinking face and an antenna
+   - "Plasma"  — glassy orb with a blurred, spinning conic-gradient plasma fill
+
+2. All five designs are driven by THREE CSS variables: --c1 (light), --c2 (glow),
+   --c3 (deep). Changing the colors must recolor every design live.
+
+3. A control bar at the top with:
+   - 3 color pickers (light / glow / deep) wired to --c1/--c2/--c3
+   - 6–8 one-click palette preset chips (e.g. mint, violet, sunset, ocean, gold,
+     emerald, graphite) that set all three colors at once
+   - A state segmented toggle: Idle / Thinking / Happy. Set a data-state attribute
+     on <body>; each design reacts (Thinking = faster pulse/spin, Happy = eyes
+     squint into happy curves)
+   - A size slider (44px–120px) that scales all avatars via a --s variable
+
+4. Each card has a "Use in Nova" button that copies that single design's CSS +
+   markup to the clipboard (with the currently-chosen colors baked into a :root
+   block), so I can paste it straight into another file. Show a small toast on copy.
+
+5. Dark theme, clean modern look: rounded cards, subtle borders, monospace labels.
+
+Make it look polished, keep all CSS/JS inline in the one file, and after creating
+it run the server and confirm the page loads at http://localhost:8088/avatar-lab.html.
